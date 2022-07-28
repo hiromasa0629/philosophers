@@ -6,11 +6,11 @@
 #    By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/15 14:22:01 by hyap              #+#    #+#              #
-#    Updated: 2022/07/23 18:18:08 by hyap             ###   ########.fr        #
+#    Updated: 2022/07/27 16:56:50 by hyap             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = ${wildcard srcs/*.c} ${wildcard gnl/*.c}
+SRCS = ${wildcard srcs/*.c}
 
 CC = gcc
 
@@ -25,6 +25,9 @@ RM = rm -f
 all: ${NAME}
 
 ${NAME}: ${SRCS}
+	${CC} ${CFLAGS} -pthread -I includes ${SRCS} -o ${NAME}
+
+thread:
 	${CC} ${CFLAGS} ${FSANITIZE} -pthread -I includes ${SRCS} -o ${NAME}
 
 clean:

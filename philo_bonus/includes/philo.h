@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:18:42 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/23 18:27:36 by hyap             ###   ########.fr       */
+/*   Updated: 2022/07/27 16:52:36 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <semaphore.h>
 # include <sys/time.h>
+# include <fcntl.h>
 # define STATUS_THINKING 0
 # define STATUS_EATING 1
 # define STATUS_SLEEPING 2
@@ -29,14 +31,10 @@
 # define PURPLE "\033[0;35m"
 
 typedef struct timeval	t_timeval;
-typedef struct s_table  t_table;
+typedef struct s_table	t_table;
 typedef struct s_fork	t_fork;
 
 typedef struct s_philo {
-	t_fork				*left;
-	t_fork				*right;
-	pthread_mutex_t		started_mutex;
-	pthread_mutex_t		eat_mutex;
 	int					is_started;
 	int					ate_num;
 	int					is_dead;
@@ -44,26 +42,18 @@ typedef struct s_philo {
 	unsigned long long	last_meal;
 	unsigned long long	start_time;
 	pthread_t			tid;
-	pthread_t			checker_tid;
 	t_table				*table;
 }				t_philo;
 
-typedef struct s_fork {
-	pthread_mutex_t	mutex;
-	int				id;
-}				t_fork;
-
 typedef struct s_table {
 	pthread_t			checker_tid;
-	pthread_mutex_t		print_mutex;
-	pthread_mutex_t		eating_mutex;
-	pthread_mutex_t		dead_mutex;
-	pthread_mutex_t		start_mutex;
+	sem_t				*forks_sem;
+	sem_t				*print_sem;
+	sem_t				*dead_sem;
 	int					is_started;
 	int					count;
 	int					has_dead;
 	t_philo				*philos;
-	t_fork				*forks;
 	int					specified;
 	int					eat_min;
 	int					die_time;
@@ -80,7 +70,10 @@ unsigned long long	calc_ms(t_timeval tv);
 unsigned long long	calc_us(int ms);
 void				good_sleep(int ms);
 int					is_dead(t_philo *ph);
-unsigned long long	get_time();
+unsigned long long	get_time(void);
 void				print_all(t_philo *ph, int status);
+int					lonely_philo(t_philo *philo);
+int					end_routine_loop(t_philo *philo);
+void				routine_eat(t_philo *philo);
 
 #endif

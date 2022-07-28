@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:23:25 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/23 17:53:10 by hyap             ###   ########.fr       */
+/*   Updated: 2022/07/26 16:13:28 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ void	init_philo(t_table *table, int i)
 	table->philos[i].numth = i;
 	table->philos[i].ate_num = 1;
 	table->philos[i].table = table;
-	table->philos[i].is_started = 0;
-	table->philos[i].last_meal = 0;
+	table->philos[i].last_meal = get_time();
 	table->philos[i].is_dead = 0;
 	if (i == table->count - 1)
 		table->philos[i].right = &table->forks[0];
@@ -60,8 +59,6 @@ void	init_threads(t_table *table)
 	while (i < table->count)
 		pthread_join(table->philos[i++].tid, NULL);
 	pthread_join(table->checker_tid, NULL);
-
-	
 }
 
 void	init_table(t_table *table, char **av, int count, int ac)

@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:30:38 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/23 16:25:08 by hyap             ###   ########.fr       */
+/*   Updated: 2022/07/25 17:52:47 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ void	good_sleep(int ms)
 	}
 }
 
-unsigned long long	get_time()
+unsigned long long	get_time(void)
 {
 	t_timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return calc_ms(tv);
+	return (calc_ms(tv));
 }
