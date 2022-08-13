@@ -6,7 +6,7 @@
 #    By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/15 14:22:01 by hyap              #+#    #+#              #
-#    Updated: 2022/07/26 16:36:34 by hyap             ###   ########.fr        #
+#    Updated: 2022/08/13 09:57:37 by hyap             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-FSANITIZE = -fsanitize=thread 
+FSANITIZE = -fsanitize=thread
 
 NAME = philo
 
@@ -25,7 +25,7 @@ RM = rm -f
 all: ${NAME}
 
 ${NAME}: ${SRCS}
-	${CC} ${CFLAGS} -pthread -I includes ${SRCS} -o ${NAME}
+	${CC} ${CFLAGS} ${FSANITIZE} -pthread -I includes ${SRCS} -o ${NAME}
 
 thread:
 	${CC} ${CFLAGS} ${FSANITIZE} -pthread -I includes ${SRCS} -o ${NAME}
