@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:18:42 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/27 16:52:36 by hyap             ###   ########.fr       */
+/*   Updated: 2022/08/25 14:41:47 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct s_table {
 	sem_t				*forks_sem;
 	sem_t				*print_sem;
 	sem_t				*dead_sem;
+	sem_t				*finish_sem;
+	sem_t				*checker_sem;
 	int					is_started;
 	int					count;
 	int					has_dead;
@@ -68,7 +70,7 @@ int					validate(int ac, char **av);
 long long			ft_atoi(char *s);
 unsigned long long	calc_ms(t_timeval tv);
 unsigned long long	calc_us(int ms);
-void				good_sleep(int ms);
+void				good_sleep(int ms, t_philo *philo);
 int					is_dead(t_philo *ph);
 unsigned long long	get_time(void);
 void				print_all(t_philo *ph, int status);

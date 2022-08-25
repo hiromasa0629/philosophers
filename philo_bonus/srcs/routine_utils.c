@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 17:49:41 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/27 17:03:53 by hyap             ###   ########.fr       */
+/*   Updated: 2022/08/25 14:47:13 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	lonely_philo(t_philo *philo)
 		if (ms > philo->table->die_time)
 		{
 			print_all(philo, STATUS_DEAD);
+			exit(1);
 			return (1);
 		}
 	}
@@ -30,24 +31,24 @@ int	lonely_philo(t_philo *philo)
 
 int	end_routine_loop(t_philo *philo)
 {
-	sem_wait(philo->table->dead_sem);
-	if (philo->table->has_dead)
+	unsigned long long	diff;
+
+	diff = get_time() - philo->last_meal;
+	if ((int)diff > philo->table->die_time)
 	{
+		print_all(philo, STATUS_DEAD);
 		sem_post(philo->table->dead_sem);
-		return (1);
+		exit(1);
 	}
-	sem_post(philo->table->dead_sem);
 	return (0);
 }
 
 void	routine_eat(t_philo *philo)
 {
-	sem_wait(philo->table->dead_sem);
 	print_all(philo, STATUS_EATING);
 	philo->last_meal = get_time();
 	philo->ate_num++;
-	sem_post(philo->table->dead_sem);
-	good_sleep(philo->table->eat_time);
+	good_sleep(philo->table->eat_time, philo);
 	sem_post(philo->table->forks_sem);
 	sem_post(philo->table->forks_sem);
 }

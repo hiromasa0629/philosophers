@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:30:38 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/25 17:52:47 by hyap             ###   ########.fr       */
+/*   Updated: 2022/08/25 14:39:18 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ unsigned long long	calc_us(int ms)
 	return ((unsigned long long)ms * 1000);
 }
 
-void	good_sleep(int ms)
+void	good_sleep(int ms, t_philo *philo)
 {
 	unsigned long long	time_enter;
 	int					diff;
 	t_timeval			tv;
 
+	(void)philo;
 	gettimeofday(&tv, NULL);
 	time_enter = calc_ms(tv);
 	diff = 0;

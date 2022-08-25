@@ -6,7 +6,7 @@
 /*   By: hyap <hyap@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:23:25 by hyap              #+#    #+#             */
-/*   Updated: 2022/07/27 17:03:22 by hyap             ###   ########.fr       */
+/*   Updated: 2022/08/25 14:46:52 by hyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ void	init_semaphores(t_table *table)
 		sem_unlink("/print");
 		table->print_sem = sem_open("/print", O_CREAT, 0664, 1);
 	}
-	table->dead_sem = sem_open("/dead", O_CREAT | O_EXCL, 0664, 1);
+	table->dead_sem = sem_open("/dead", O_CREAT | O_EXCL, 0664, 0);
 	if (table->dead_sem == SEM_FAILED)
 	{
 		sem_unlink("/dead");
-		table->dead_sem = sem_open("/dead", O_CREAT, 0664, 1);
+		table->dead_sem = sem_open("/dead", O_CREAT, 0664, 0);
 	}
+	sem_unlink("/finish");
+	if (table->specified)
+		table->finish_sem = sem_open("/finish", O_CREAT, 0664, 0);
 }
 
 void	init_philo(t_table *table, int i)
@@ -47,21 +50,28 @@ void	init_philo(t_table *table, int i)
 void	init_threads(t_table *table)
 {
 	int	i;
+	int	pid;
 
-	i = 0;
+	i = -1;
 	table->start_time = get_time();
-	while (i < table->count)
+	while (++i < table->count)
 	{
-		init_philo(table, i);
-		pthread_create(&table->philos[i].tid, NULL, &routine, \
-			(void *)&table->philos[i]);
-		i++;
+		pid = fork();
+		if (pid == 0)
+		{
+			init_philo(table, i);
+			routine(&table->philos[i]);
+			exit(1);
+		}
 	}
-	pthread_create(&table->checker_tid, NULL, &checker, (void *)table);
-	i = 0;
-	while (i < table->count)
-		pthread_join(table->philos[i++].tid, NULL);
-	pthread_join(table->checker_tid, NULL);
+	if (!table->specified)
+		return ;
+	i = -1;
+	while (++i < table->count)
+		sem_wait(table->finish_sem);
+	i = -1;
+	while (++i < table->count)
+		sem_post(table->dead_sem);
 }
 
 void	init_table(t_table *table, char **av, int count, int ac)
@@ -93,5 +103,6 @@ int	main(int ac, char **av)
 	if (num > __INT_MAX__ || num < -__INT_MAX__ - 1 || num == 0)
 		return (0);
 	init_table(&table, av, (int)num, ac);
+	waitpid(-1, NULL, 0);
 	return (0);
 }
